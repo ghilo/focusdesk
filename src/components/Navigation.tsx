@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { LayoutDashboard, FolderKanban, Users, Settings, LogOut, HelpCircle, Plus } from "lucide-react";
+import { LayoutDashboard, FolderKanban, Users, Settings, LogOut, HelpCircle, Plus, Shield } from "lucide-react";
 import clsx from "clsx";
 
 const navItems = [
@@ -52,6 +52,21 @@ export default function Navigation() {
             </Link>
           );
         })}
+        
+        {session.user?.email === "yahiaoui.aghiles@gmail.com" && (
+          <Link
+            href="/admin"
+            className={clsx(
+              "flex items-center gap-4 px-3 py-2 md:px-8 md:py-3.5 transition-all duration-300 relative rounded-lg md:rounded-none md:mx-0 mx-2",
+              pathname.startsWith("/admin")
+                ? "bg-surface-container text-white font-bold"
+                : "text-zinc-500 font-medium hover:text-white"
+            )}
+          >
+            <Shield className={clsx("w-5 h-5", pathname.startsWith("/admin") ? "text-primary" : "")} />
+            <span className="hidden md:inline text-xs tracking-wide">ADMIN</span>
+          </Link>
+        )}
       </div>
 
       {/* Bottom Actions */}
