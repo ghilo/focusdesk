@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${manrope.variable} font-sans antialiased text-foreground bg-background`} suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
           <NextAuthProvider>
             <div className="flex h-screen overflow-hidden">
               <Navigation />
