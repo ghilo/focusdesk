@@ -19,10 +19,10 @@ export default function StatCard({ title, value, highlight, onClick, isActive }:
         isActive && "bg-surface-highest shadow-[0_4px_32px_rgba(186,158,255,0.1)] ring-1 ring-primary/30"
       )}
     >
-      <h3 className="text-sm font-medium text-zinc-400 mb-2">{title}</h3>
+      <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-2">{title}</h3>
       <p className={clsx(
         "font-display text-4xl font-extrabold tracking-tight",
-        highlight ? "text-primary bg-clip-text text-transparent bg-gradient-to-br from-primary-dim to-primary" : "text-white"
+        highlight ? "text-primary bg-clip-text text-transparent bg-gradient-to-br from-primary-dim to-primary" : "text-foreground"
       )}>
         {value}
       </p>

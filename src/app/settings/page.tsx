@@ -81,7 +81,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <h2 className="text-xl font-bold">Profil</h2>
-              <p className="text-sm text-zinc-400">Gérez vos informations personnelles.</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Gérez vos informations personnelles.</p>
             </div>
           </div>
 
@@ -93,7 +93,7 @@ export default function SettingsPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-zinc-900 border border-border rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                className="w-full bg-surface-highest border border-border rounded-xl px-4 py-2.5 text-foreground placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                 placeholder="Votre nom"
               />
             </div>
@@ -102,7 +102,7 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={isSaving || !name.trim() || name === session?.user?.name}
-                className="flex items-center gap-2 bg-primary text-white font-medium px-5 py-2.5 rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 bg-primary text-foreground font-medium px-5 py-2.5 rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                 Sauvegarder
@@ -125,7 +125,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <h2 className="text-xl font-bold">Apparence</h2>
-              <p className="text-sm text-zinc-400">Personnalisez l&apos;affichage de l&apos;interface.</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Personnalisez l&apos;affichage de l&apos;interface.</p>
             </div>
           </div>
 
@@ -134,31 +134,31 @@ export default function SettingsPage() {
               onClick={() => setTheme("dark")}
               className={clsx(
                 "flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 transition-all flex-1 md:flex-none",
-                theme === "dark" ? "border-primary bg-primary/10" : "border-border hover:border-zinc-500 bg-zinc-900/50"
+                theme === "dark" ? "border-primary bg-primary/10" : "border-border hover:border-zinc-500 bg-surface-highest/50"
               )}
             >
-              <Moon className={clsx("w-5 h-5", theme === "dark" ? "text-primary" : "text-zinc-400")} />
-              <span className={clsx("font-medium", theme === "dark" ? "text-primary" : "text-zinc-400")}>Sombre</span>
+              <Moon className={clsx("w-5 h-5", theme === "dark" ? "text-primary" : "text-zinc-500 dark:text-zinc-400")} />
+              <span className={clsx("font-medium", theme === "dark" ? "text-primary" : "text-zinc-500 dark:text-zinc-400")}>Sombre</span>
             </button>
             <button
               onClick={() => setTheme("light")}
               className={clsx(
                 "flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 transition-all flex-1 md:flex-none",
-                theme === "light" ? "border-primary bg-primary/10" : "border-border hover:border-zinc-500 bg-zinc-900/50"
+                theme === "light" ? "border-primary bg-primary/10" : "border-border hover:border-zinc-500 bg-surface-highest/50"
               )}
             >
-              <Sun className={clsx("w-5 h-5", theme === "light" ? "text-primary" : "text-zinc-400")} />
-              <span className={clsx("font-medium", theme === "light" ? "text-primary" : "text-zinc-400")}>Clair</span>
+              <Sun className={clsx("w-5 h-5", theme === "light" ? "text-primary" : "text-zinc-500 dark:text-zinc-400")} />
+              <span className={clsx("font-medium", theme === "light" ? "text-primary" : "text-zinc-500 dark:text-zinc-400")}>Clair</span>
             </button>
             <button
               onClick={() => setTheme("system")}
               className={clsx(
                 "flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 transition-all flex-1 md:flex-none",
-                theme === "system" ? "border-primary bg-primary/10" : "border-border hover:border-zinc-500 bg-zinc-900/50"
+                theme === "system" ? "border-primary bg-primary/10" : "border-border hover:border-zinc-500 bg-surface-highest/50"
               )}
             >
-              <Monitor className={clsx("w-5 h-5", theme === "system" ? "text-primary" : "text-zinc-400")} />
-              <span className={clsx("font-medium", theme === "system" ? "text-primary" : "text-zinc-400")}>Système</span>
+              <Monitor className={clsx("w-5 h-5", theme === "system" ? "text-primary" : "text-zinc-500 dark:text-zinc-400")} />
+              <span className={clsx("font-medium", theme === "system" ? "text-primary" : "text-zinc-500 dark:text-zinc-400")}>Système</span>
             </button>
           </div>
         </section>
@@ -189,7 +189,7 @@ export default function SettingsPage() {
                      <button 
                        key={c.id} 
                        onClick={() => handleDeleteClient(c.id, c.name)}
-                       className="text-xs bg-danger/10 hover:bg-danger hover:text-white border border-danger/30 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+                       className="text-xs bg-danger/10 hover:bg-danger hover:text-foreground border border-danger/30 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
                      >
                        <Trash2 className="w-3.5 h-3.5" />
                        {c.name}

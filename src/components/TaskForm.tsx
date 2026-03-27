@@ -127,17 +127,17 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
         className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 transition-opacity"
         onClick={onClose}
       />
-      <div className="fixed top-0 right-0 h-full w-full md:w-[450px] bg-surface-container/95 backdrop-blur-xl border-l border-white/5 z-50 p-6 overflow-y-auto animate-slide-in-right shadow-2xl shadow-black/50">
+      <div className="fixed top-0 right-0 h-full w-full md:w-[450px] bg-surface-container/95 backdrop-blur-xl border-l border-foreground/5 border-opacity-10 dark:border-opacity-5 z-50 p-6 overflow-y-auto animate-slide-in-right shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between mb-8">
           <h2 className="font-display text-2xl font-extrabold tracking-tight">{taskToEdit ? "Modifier la Tâche" : "Nouvelle Tâche"}</h2>
-          <button onClick={onClose} className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-surface transition-colors">
+          <button onClick={onClose} className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-foreground rounded-lg hover:bg-surface transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Titre <span className="text-danger">*</span></label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Titre <span className="text-danger">*</span></label>
             <input
               type="text"
               value={title}
@@ -146,14 +146,14 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
                 if (error) setError("");
               }}
               placeholder="Que devez-vous faire ?"
-              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-foreground placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
               autoFocus
             />
             {error && <p className="text-danger text-sm mt-1">{error}</p>}
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Priorité</label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Priorité</label>
             <div className="flex bg-surface-highest p-1 rounded-xl">
               {(["high", "medium", "low"] as Priority[]).map((p) => (
                 <button
@@ -163,8 +163,8 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
                   className={clsx(
                     "flex-1 py-2.5 text-sm font-medium rounded-lg capitalize transition-all duration-300",
                     priority === p
-                      ? "bg-gradient-to-br from-primary-dim to-primary text-white shadow-[0_0_16px_rgba(186,158,255,0.2)]"
-                      : "text-zinc-500 hover:text-white"
+                      ? "bg-gradient-to-br from-primary-dim to-primary text-foreground shadow-[0_0_16px_rgba(186,158,255,0.2)]"
+                      : "text-zinc-500 hover:text-foreground"
                   )}
                 >
                   {p === "high" ? "Haute" : p === "medium" ? "Moyenne" : "Basse"}
@@ -174,11 +174,11 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Client <span className="text-danger">*</span></label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Client <span className="text-danger">*</span></label>
             <select
               value={clientId}
               onChange={(e) => setClientId(e.target.value)}
-              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer transition-all"
+              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer transition-all"
             >
               <option value="">Aucun client</option>
               {clients
@@ -192,17 +192,17 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
                 value={newClientName}
                 onChange={(e) => setNewClientName(e.target.value)}
                 placeholder="Nom du nouveau client..."
-                className="w-full bg-surface border border-primary/50 mt-2 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full bg-surface border border-primary/50 mt-2 rounded-xl px-4 py-2.5 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               />
             )}
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Projet <span className="text-danger">*</span></label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Projet <span className="text-danger">*</span></label>
             <select
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}
-              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer transition-all"
+              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer transition-all"
             >
               <option value="">Aucun projet</option>
               {projects
@@ -221,32 +221,32 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
                 placeholder="Nom du nouveau projet..."
-                className="w-full bg-surface border border-primary/50 mt-2 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full bg-surface border border-primary/50 mt-2 rounded-xl px-4 py-2.5 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               />
             )}
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Date et heure d&apos;échéance</label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Date et heure d&apos;échéance</label>
             <div className="relative">
               <input
                 type="datetime-local"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full bg-surface-highest/80 border border-transparent rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none [&::-webkit-calendar-picker-indicator]:invert-[1] [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 cursor-pointer transition-all"
+                className="w-full bg-surface-highest/80 border border-transparent rounded-xl pl-12 pr-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none [&::-webkit-calendar-picker-indicator]:invert-[1] [&::-webkit-calendar-picker-indicator]:opacity-50 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 cursor-pointer transition-all"
               />
               <CalendarIcon className="w-5 h-5 text-zinc-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Notes (optionnel)</label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Notes (optionnel)</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Détails supplémentaires..."
               rows={4}
-              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary resize-none placeholder-zinc-600 transition-all"
+              className="w-full bg-surface-highest/80 border border-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary resize-none placeholder-zinc-600 transition-all"
             />
           </div>
 
@@ -260,7 +260,7 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
                     onClose();
                   }
                 }}
-                className="py-3 px-4 flex items-center justify-center rounded-xl text-zinc-400 hover:text-danger hover:bg-danger/10 transition-colors focus:outline-none"
+                className="py-3 px-4 flex items-center justify-center rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-danger hover:bg-danger/10 transition-colors focus:outline-none"
                 title="Supprimer la tâche"
               >
                 <Trash2 className="w-5 h-5" />
@@ -269,14 +269,14 @@ export default function TaskForm({ isOpen, onClose, taskToEdit, defaultProjectId
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 px-4 rounded-xl font-medium text-white bg-surfaceHov hover:bg-zinc-700 transition-colors"
+              className="flex-1 py-3 px-4 rounded-xl font-medium text-foreground bg-surfaceHov hover:bg-zinc-700 transition-colors"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className={clsx("flex-1 py-3 px-4 rounded-xl font-medium text-white shadow-lg transition-all duration-300", isSubmitting ? "bg-primary-dim/50 cursor-not-allowed" : "bg-gradient-to-br from-primary-dim to-primary hover:shadow-[0_0_24px_rgba(186,158,255,0.25)] hover:scale-[1.02]")}
+              className={clsx("flex-1 py-3 px-4 rounded-xl font-medium text-foreground shadow-lg transition-all duration-300", isSubmitting ? "bg-primary-dim/50 cursor-not-allowed" : "bg-gradient-to-br from-primary-dim to-primary hover:shadow-[0_0_24px_rgba(186,158,255,0.25)] hover:scale-[1.02]")}
             >
               {isSubmitting ? "Enregistrement..." : "Enregistrer"}
             </button>

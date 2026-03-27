@@ -62,12 +62,12 @@ export default function ClientsPage() {
     <div className="max-w-5xl mx-auto py-6">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-white">Clients</h1>
-          <p className="text-zinc-400 mt-2 text-sm md:text-base">Vos partenaires et commanditaires.</p>
+          <h1 className="font-display text-4xl font-extrabold tracking-tight text-foreground">Clients</h1>
+          <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-sm md:text-base">Vos partenaires et commanditaires.</p>
         </div>
         <button
           onClick={() => setIsCreating(!isCreating)}
-          className="px-4 py-2.5 bg-gradient-to-br from-primary-dim to-primary text-white font-medium rounded-xl hover:shadow-[0_0_24px_rgba(186,158,255,0.2)] transition-all duration-300"
+          className="px-4 py-2.5 bg-gradient-to-br from-primary-dim to-primary text-foreground font-medium rounded-xl hover:shadow-[0_0_24px_rgba(186,158,255,0.2)] transition-all duration-300"
         >
           {isCreating ? "Annuler" : "Nouveau client"}
         </button>
@@ -76,16 +76,16 @@ export default function ClientsPage() {
       {isCreating && (
         <form onSubmit={handleCreate} className="mb-8 p-6 bg-surface-container rounded-2xl flex flex-col md:flex-row gap-4 items-end animate-slide-in-right">
           <div className="flex-1 w-full space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Nom du client</label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Nom du client</label>
             <input
               type="text"
               value={newClientName}
               onChange={(e) => setNewClientName(e.target.value)}
-              className="w-full bg-surface-highest/50 border border-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+              className="w-full bg-surface-highest/50 border border-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
               autoFocus
             />
           </div>
-          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-white text-black font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-sm focus:outline-none">
+          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-sm focus:outline-none">
             Créer
           </button>
         </form>
@@ -136,20 +136,20 @@ export default function ClientsPage() {
                       onChange={(e) => setEditName(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && saveEdit(client.id)}
                       autoFocus
-                      className="bg-surface border border-primary/50 rounded-lg px-2 py-1 text-white text-xl font-bold w-full md:max-w-[200px] outline-none"
+                      className="bg-surface border border-primary/50 rounded-lg px-2 py-1 text-foreground text-xl font-bold w-full md:max-w-[200px] outline-none"
                     />
                     <button onClick={() => saveEdit(client.id)} className="text-primary text-sm font-medium hover:text-primary-hover px-2">OK</button>
-                    <button onClick={() => setEditingId(null)} className="text-zinc-500 text-sm font-medium hover:text-white">Annuler</button>
+                    <button onClick={() => setEditingId(null)} className="text-zinc-500 text-sm font-medium hover:text-foreground">Annuler</button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">
                     <h3 
                       onDoubleClick={() => !isArchived && startEditing(client.id, client.name)} 
-                      className="font-display text-2xl font-bold text-white tracking-tight flex items-center gap-2 cursor-text"
+                      className="font-display text-2xl font-bold text-foreground tracking-tight flex items-center gap-2 cursor-text"
                       title={!isArchived ? "Double-cliquez pour renommer" : ""}
                     >
                       @{client.name}
-                      {isArchived && <span className="text-[10px] uppercase font-bold bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded-md">Archivé</span>}
+                      {isArchived && <span className="text-[10px] uppercase font-bold bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-2 py-0.5 rounded-md">Archivé</span>}
                     </h3>
                     {!isArchived && (
                       <button 
@@ -164,14 +164,14 @@ export default function ClientsPage() {
                 )}
               </div>
               
-              <div className="mt-auto grid grid-cols-2 gap-4 border-t border-white/5 pt-4">
+              <div className="mt-auto grid grid-cols-2 gap-4 border-t border-foreground/5 border-opacity-10 dark:border-opacity-5 pt-4">
                 <div>
-                  <div className="text-zinc-400 text-sm font-medium mb-1">Projets</div>
-                  <div className="font-display text-2xl font-extrabold text-white">{clientProjects.length}</div>
+                  <div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium mb-1">Projets</div>
+                  <div className="font-display text-2xl font-extrabold text-foreground">{clientProjects.length}</div>
                 </div>
                 <div>
-                  <div className="text-zinc-400 text-sm font-medium mb-1">Tâches</div>
-                  <div className="font-display text-2xl font-extrabold text-white">{clientTasks.length}</div>
+                  <div className="text-zinc-500 dark:text-zinc-400 text-sm font-medium mb-1">Tâches</div>
+                  <div className="font-display text-2xl font-extrabold text-foreground">{clientTasks.length}</div>
                 </div>
               </div>
             </div>

@@ -22,11 +22,11 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="w-full md:w-64 bg-background flex flex-col fixed md:relative bottom-0 md:bottom-auto z-40 h-16 md:h-full border-t md:border-t-0 md:border-r border-white/5">
+    <nav className="w-full md:w-64 bg-background flex flex-col fixed md:relative bottom-0 md:bottom-auto z-40 h-16 md:h-full border-t md:border-t-0 md:border-r border-foreground/5 border-opacity-10 dark:border-opacity-5">
       
       {/* Brand Logo Menu */}
       <div className="hidden md:flex flex-col gap-1 p-8 mb-4">
-        <span className="font-display font-bold text-2xl tracking-tight text-white leading-none">FocusDesk</span>
+        <span className="font-display font-bold text-2xl tracking-tight text-foreground leading-none">FocusDesk</span>
         <span className="text-[10px] text-zinc-500 font-bold tracking-widest uppercase">Freelance Cockpit</span>
       </div>
 
@@ -43,8 +43,8 @@ export default function Navigation() {
               className={clsx(
                 "flex items-center gap-4 px-3 py-2 md:px-8 md:py-3.5 transition-all duration-300 relative rounded-lg md:rounded-none md:mx-0 mx-2",
                 isActive
-                  ? "bg-surface-container text-white font-bold"
-                  : "text-zinc-500 font-medium hover:text-white"
+                  ? "bg-surface-container text-foreground font-bold"
+                  : "text-zinc-500 font-medium hover:text-foreground"
               )}
             >
               <Icon className={clsx("w-5 h-5", isActive ? "text-primary" : "")} />
@@ -59,8 +59,8 @@ export default function Navigation() {
             className={clsx(
               "flex items-center gap-4 px-3 py-2 md:px-8 md:py-3.5 transition-all duration-300 relative rounded-lg md:rounded-none md:mx-0 mx-2",
               pathname.startsWith("/admin")
-                ? "bg-surface-container text-white font-bold"
-                : "text-zinc-500 font-medium hover:text-white"
+                ? "bg-surface-container text-foreground font-bold"
+                : "text-zinc-500 font-medium hover:text-foreground"
             )}
           >
             <Shield className={clsx("w-5 h-5", pathname.startsWith("/admin") ? "text-primary" : "")} />
@@ -78,13 +78,13 @@ export default function Navigation() {
         </div>
         
         <div className="flex flex-col gap-1">
-          <Link href="/help" className="flex items-center gap-4 px-8 py-3 text-zinc-500 hover:text-white font-medium transition-colors">
+          <Link href="/help" className="flex items-center gap-4 px-8 py-3 text-zinc-500 hover:text-foreground font-medium transition-colors">
             <HelpCircle className="w-4 h-4" />
             <span className="text-xs tracking-wide">AIDE</span>
           </Link>
           <button
             onClick={() => signOut()}
-            className="flex items-center gap-4 px-8 py-3 text-zinc-500 hover:text-white font-medium transition-colors w-full text-left"
+            className="flex items-center gap-4 px-8 py-3 text-zinc-500 hover:text-foreground font-medium transition-colors w-full text-left"
           >
             <LogOut className="w-4 h-4" />
             <span className="text-xs tracking-wide">DÉCONNEXION</span>

@@ -61,12 +61,12 @@ function ProjectsPageInner() {
     <div className="max-w-5xl mx-auto py-6">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-white">Projets</h1>
-          <p className="text-zinc-400 mt-2 text-sm md:text-base">Gérez vos chantiers en cours.</p>
+          <h1 className="font-display text-4xl font-extrabold tracking-tight text-foreground">Projets</h1>
+          <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-sm md:text-base">Gérez vos chantiers en cours.</p>
         </div>
         <button
           onClick={() => setIsCreating(!isCreating)}
-          className="px-4 py-2.5 bg-gradient-to-br from-primary-dim to-primary text-white font-medium rounded-xl hover:shadow-[0_0_24px_rgba(186,158,255,0.2)] transition-all duration-300"
+          className="px-4 py-2.5 bg-gradient-to-br from-primary-dim to-primary text-foreground font-medium rounded-xl hover:shadow-[0_0_24px_rgba(186,158,255,0.2)] transition-all duration-300"
         >
           {isCreating ? "Annuler" : "Nouveau projet"}
         </button>
@@ -75,30 +75,30 @@ function ProjectsPageInner() {
       {isCreating && (
         <form onSubmit={handleCreate} className="mb-8 p-6 bg-surface-container rounded-2xl flex flex-col md:flex-row gap-4 items-end animate-slide-in-right">
           <div className="flex-1 w-full space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Nom du projet</label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Nom du projet</label>
             <input
               type="text"
               value={newProjectName}
               onChange={(e) => setNewProjectName(e.target.value)}
-              className="w-full bg-surface-highest/50 border border-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+              className="w-full bg-surface-highest/50 border border-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
               autoFocus
             />
           </div>
           <div className="flex-1 w-full space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Client associé <span className="text-danger">*</span></label>
+            <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Client associé <span className="text-danger">*</span></label>
             <select
               value={newProjectClient}
               onChange={(e) => {
                 setNewProjectClient(e.target.value);
                 if (error) setError("");
               }}
-              className="w-full bg-surface-highest/50 border border-transparent rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer"
+              className="w-full bg-surface-highest/50 border border-transparent rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary appearance-none cursor-pointer"
             >
               <option value="">Sélectionnez un client</option>
               {clients.filter(c => !c.archived).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-white text-black font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-sm focus:outline-none">
+          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-sm focus:outline-none">
             Créer
           </button>
         </form>
@@ -143,16 +143,16 @@ function ProjectsPageInner() {
                       onChange={(e) => setEditName(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && saveEdit(project.id)}
                       autoFocus
-                      className="bg-zinc-900 border border-primary/50 rounded-lg px-2 py-1 text-white text-xl font-bold w-full outline-none"
+                      className="bg-zinc-900 border border-primary/50 rounded-lg px-2 py-1 text-foreground text-xl font-bold w-full outline-none"
                     />
                     <button onClick={(e) => { e.preventDefault(); saveEdit(project.id); }} className="text-primary text-sm font-medium hover:text-primary-hover px-2">OK</button>
-                    <button onClick={(e) => { e.preventDefault(); setEditingId(null); }} className="text-zinc-500 text-sm font-medium hover:text-white">Annuler</button>
+                    <button onClick={(e) => { e.preventDefault(); setEditingId(null); }} className="text-zinc-500 text-sm font-medium hover:text-foreground">Annuler</button>
                   </div>
                 ) : (
                   <div className="flex items-start gap-3 pr-6">
                     <h3
                       onDoubleClick={(e) => { e.preventDefault(); startEditing(project.id, project.name); }}
-                      className="font-display text-2xl font-bold text-white tracking-tight cursor-text"
+                      className="font-display text-2xl font-bold text-foreground tracking-tight cursor-text"
                       title="Double-cliquez pour renommer"
                     >
                       {project.name}
@@ -167,14 +167,14 @@ function ProjectsPageInner() {
                   </div>
                 )}
               </div>
-              {client && <p className="text-sm text-zinc-400 font-medium tracking-tight mb-8">@{client.name}</p>}
+              {client && <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium tracking-tight mb-8">@{client.name}</p>}
               {!client && <p className="text-sm text-zinc-500 mb-8">Projet interne</p>}
 
               <div className="mt-auto">
                 <div className="flex justify-between items-end mb-3">
                   <div>
-                    <span className="font-display text-3xl font-extrabold text-white mr-1.5">{activeTasks}</span>
-                    <span className="text-sm text-zinc-400">tâche{activeTasks !== 1 ? 's' : ''} active{activeTasks !== 1 ? 's' : ''}</span>
+                    <span className="font-display text-3xl font-extrabold text-foreground mr-1.5">{activeTasks}</span>
+                    <span className="text-sm text-zinc-500 dark:text-zinc-400">tâche{activeTasks !== 1 ? 's' : ''} active{activeTasks !== 1 ? 's' : ''}</span>
                   </div>
                   <span className="text-sm font-bold text-primary">{progress}%</span>
                 </div>

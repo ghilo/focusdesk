@@ -13,7 +13,7 @@ export default function LoginPage() {
         </div>
         
         <h1 className="text-3xl font-bold tracking-tight mb-2">Bienvenue sur FocusDesk</h1>
-        <p className="text-zinc-400 mb-8">
+        <p className="text-zinc-500 dark:text-zinc-400 mb-8">
           Connectez-vous pour accéder à votre espace de travail et gérer vos clients et projets.
         </p>
 

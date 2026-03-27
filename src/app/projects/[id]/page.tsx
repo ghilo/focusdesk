@@ -87,7 +87,7 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <div className="max-w-5xl mx-auto py-6 px-4 md:px-8">
-        <p className="text-zinc-400">Projet introuvable.</p>
+        <p className="text-zinc-500 dark:text-zinc-400">Projet introuvable.</p>
         <button onClick={() => router.push("/projects")} className="mt-4 text-primary hover:text-primary-hover font-medium">
           ← Retour aux projets
         </button>
@@ -101,7 +101,7 @@ export default function ProjectDetailPage() {
       <div className="mb-8">
         <button
           onClick={() => router.push("/projects")}
-          className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm mb-4"
+          className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-foreground transition-colors text-sm mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Tous les projets
@@ -120,10 +120,10 @@ export default function ProjectDetailPage() {
                     if (e.key === "Escape") setIsEditingName(false);
                   }}
                   autoFocus
-                  className="bg-surface border border-primary/50 rounded-xl px-4 py-2 text-white text-3xl font-bold w-full outline-none focus:ring-2 focus:ring-primary"
+                  className="bg-surface border border-primary/50 rounded-xl px-4 py-2 text-foreground text-3xl font-bold w-full outline-none focus:ring-2 focus:ring-primary"
                 />
                 <button onClick={saveEditName} className="text-primary font-medium hover:text-primary-hover px-3 py-2 whitespace-nowrap">OK</button>
-                <button onClick={() => setIsEditingName(false)} className="text-zinc-500 hover:text-white px-2 py-2">Annuler</button>
+                <button onClick={() => setIsEditingName(false)} className="text-zinc-500 hover:text-foreground px-2 py-2">Annuler</button>
               </div>
             ) : (
               <div className="flex items-center gap-3 group">
@@ -143,14 +143,14 @@ export default function ProjectDetailPage() {
                 </button>
               </div>
             )}
-            {client && <p className="text-zinc-400 mt-1 font-medium">@{client.name}</p>}
+            {client && <p className="text-zinc-500 dark:text-zinc-400 mt-1 font-medium">@{client.name}</p>}
           </div>
         </div>
 
         {/* Progress */}
         <div className="mt-6">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-zinc-400">
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
               {doneTasks.length} / {total} tâche{total !== 1 ? "s" : ""} terminée{doneTasks.length !== 1 ? "s" : ""}
             </span>
             <span className="text-sm font-bold text-primary">{progress}%</span>
@@ -201,7 +201,7 @@ export default function ProjectDetailPage() {
             <div className="pt-6 pb-2">
               <button
                 onClick={() => setShowDone(!showDone)}
-                className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
+                className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-foreground transition-colors"
               >
                 {showDone ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 <span className="font-medium">Tâches terminées ({doneTasks.length})</span>
@@ -230,7 +230,7 @@ export default function ProjectDetailPage() {
       {/* FAB */}
       <button
         onClick={() => { setEditingTask(null); setIsFormOpen(true); }}
-        className="fixed bottom-24 md:bottom-10 right-6 md:right-10 w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-[#7C3AED] hover:scale-105 transition-all z-10"
+        className="fixed bottom-24 md:bottom-10 right-6 md:right-10 w-14 h-14 bg-primary text-foreground rounded-full flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-[#7C3AED] hover:scale-105 transition-all z-10"
       >
         <Plus className="w-6 h-6" />
       </button>

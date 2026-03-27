@@ -37,7 +37,7 @@ export default async function AdminPage() {
             <ShieldAlert className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-display font-semibold tracking-tight text-white mb-2">
+            <h1 className="text-3xl font-display font-semibold tracking-tight text-foreground mb-2">
               Panneau d&apos;Administration
             </h1>
             <p className="text-zinc-500 font-medium">
@@ -49,39 +49,39 @@ export default async function AdminPage() {
 
       {/* Global Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-        <div className="bg-surface-container rounded-3xl p-6 border border-white/5 flex flex-col justify-between">
+        <div className="bg-surface-container rounded-3xl p-6 border border-foreground/5 border-opacity-10 dark:border-opacity-5 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xs font-bold tracking-widest text-zinc-500 uppercase">Utilisateurs</h3>
             <Users className="w-5 h-5 text-purple-500" />
           </div>
-          <p className="text-4xl font-display font-bold text-white tracking-tight">{totalUsers}</p>
+          <p className="text-4xl font-display font-bold text-foreground tracking-tight">{totalUsers}</p>
         </div>
-        <div className="bg-surface-container rounded-3xl p-6 border border-white/5 flex flex-col justify-between">
+        <div className="bg-surface-container rounded-3xl p-6 border border-foreground/5 border-opacity-10 dark:border-opacity-5 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xs font-bold tracking-widest text-zinc-500 uppercase">Projets Globaux</h3>
             <FolderKanban className="w-5 h-5 text-blue-500" />
           </div>
-          <p className="text-4xl font-display font-bold text-white tracking-tight">{totalProjects}</p>
+          <p className="text-4xl font-display font-bold text-foreground tracking-tight">{totalProjects}</p>
         </div>
-        <div className="bg-surface-container rounded-3xl p-6 border border-white/5 flex flex-col justify-between">
+        <div className="bg-surface-container rounded-3xl p-6 border border-foreground/5 border-opacity-10 dark:border-opacity-5 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xs font-bold tracking-widest text-zinc-500 uppercase">Tâches Globales</h3>
             <CheckCircle2 className="w-5 h-5 text-emerald-500" />
           </div>
-          <p className="text-4xl font-display font-bold text-white tracking-tight">{totalTasks}</p>
+          <p className="text-4xl font-display font-bold text-foreground tracking-tight">{totalTasks}</p>
         </div>
       </div>
 
       {/* Users List */}
-      <h2 className="text-xl font-display font-bold text-white mb-6 flex items-center gap-2">
+      <h2 className="text-xl font-display font-bold text-foreground mb-6 flex items-center gap-2">
         Annuaire des Utilisateurs
       </h2>
       
-      <div className="bg-surface-container rounded-2xl border border-white/5 overflow-hidden">
+      <div className="bg-surface-container rounded-2xl border border-foreground/5 border-opacity-10 dark:border-opacity-5 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead>
-              <tr className="border-b border-white/5 bg-surface-highest/30">
+              <tr className="border-b border-foreground/5 border-opacity-10 dark:border-opacity-5 bg-surface-highest/30">
                 <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Utilisateur</th>
                 <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase text-center">Projets</th>
                 <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase text-center">Clients</th>
@@ -89,7 +89,7 @@ export default async function AdminPage() {
                 <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase text-center">Tâches Finies</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-foreground/5 divide-opacity-10 dark:divide-opacity-5">
               {users.map((user) => {
                 const activeTasks = user.tasks.filter((t) => t.status === "active").length;
                 const completedTasks = user.tasks.filter((t) => t.status === "done").length;
@@ -101,15 +101,15 @@ export default async function AdminPage() {
                       <div className="flex items-center gap-3">
                         {user.image ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={user.image} alt={user.name || "User"} className="w-10 h-10 rounded-full border border-white/10" />
+                          <img src={user.image} alt={user.name || "User"} className="w-10 h-10 rounded-full border border-foreground/10 border-opacity-10 dark:border-opacity-10" />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-surface-highest flex items-center justify-center text-white font-bold text-sm border border-white/10">
+                          <div className="w-10 h-10 rounded-full bg-surface-highest flex items-center justify-center text-foreground font-bold text-sm border border-foreground/10 border-opacity-10 dark:border-opacity-10">
                             {user.email?.charAt(0).toUpperCase()}
                           </div>
                         )}
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-white">{user.name || "Sans nom"}</span>
-                          <span className="text-xs text-zinc-400">{user.email}</span>
+                          <span className="text-sm font-bold text-foreground">{user.name || "Sans nom"}</span>
+                          <span className="text-xs text-zinc-500 dark:text-zinc-400">{user.email}</span>
                         </div>
                       </div>
                     </td>

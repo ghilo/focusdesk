@@ -86,7 +86,7 @@ export default function TaskCard({ task, project, client, onComplete, onUncomple
         <div 
           {...attributes} 
           {...listeners}
-          className="flex items-center justify-center -ml-2 text-zinc-600 outline-none cursor-grab active:cursor-grabbing hover:text-white transition-colors"
+          className="flex items-center justify-center -ml-2 text-zinc-600 outline-none cursor-grab active:cursor-grabbing hover:text-foreground transition-colors"
           onClick={(e) => e.stopPropagation()}
         >
           <GripVertical className="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -107,7 +107,7 @@ export default function TaskCard({ task, project, client, onComplete, onUncomple
         className={clsx(
           "mt-0.5 flex-shrink-0 w-6 h-6 rounded-md border flex items-center justify-center transition-all duration-300 focus:outline-none",
           isDone 
-            ? "border-primary bg-primary text-white shadow-[0_0_12px_rgba(186,158,255,0.4)]" 
+            ? "border-primary bg-primary text-foreground shadow-[0_0_12px_rgba(186,158,255,0.4)]" 
             : "border-zinc-700 bg-surface text-transparent hover:border-primary hover:text-primary"
         )}
       >
@@ -118,7 +118,7 @@ export default function TaskCard({ task, project, client, onComplete, onUncomple
         <div className="flex items-center gap-2 mb-1.5">
           <p className={clsx(
             "font-medium truncate text-base transition-colors",
-            isDone ? "text-zinc-500 line-through decoration-zinc-600" : "text-white"
+            isDone ? "text-zinc-500 line-through decoration-zinc-600" : "text-foreground"
           )}>
             {task.title}
           </p>
@@ -132,7 +132,7 @@ export default function TaskCard({ task, project, client, onComplete, onUncomple
         {(project || client || task.dueDate) && (
           <div className={clsx(
             "flex flex-wrap items-center gap-x-4 gap-y-2 text-xs",
-            isDone ? "text-zinc-600" : "text-zinc-400"
+            isDone ? "text-zinc-600" : "text-zinc-500 dark:text-zinc-400"
           )}>
             {project && (
               <span className="flex items-center gap-1.5 min-w-0">
