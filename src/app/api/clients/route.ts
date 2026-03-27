@@ -42,8 +42,7 @@ export async function POST(req: Request) {
       },
     });
     return NextResponse.json(client);
-  } catch (error: any) {
-    require("fs").appendFileSync("/tmp/next_api_error.log", "CLIENT CREATION ERROR: " + String(error.message || error) + "\n");
+  } catch (error: unknown) {
     console.error("CLIENT CREATION ERROR:", error);
     return NextResponse.json({ error: "Failed to create client" }, { status: 500 });
   }

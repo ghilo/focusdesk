@@ -12,7 +12,7 @@ import clsx from "clsx";
 
 export default function Dashboard() {
   const { data: session } = useSession();
-  const { tasks, projects, clients, completeTask, uncompleteTask, fetchData } = useStore();
+  const { tasks, projects, clients, completeTask, fetchData } = useStore();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   
@@ -61,6 +61,7 @@ export default function Dashboard() {
           <button className="text-zinc-400 hover:text-white transition-colors focus:outline-none"><Bell className="w-5 h-5" /></button>
           <button className="text-zinc-400 hover:text-white transition-colors focus:outline-none"><Command className="w-5 h-5" /></button>
           {session?.user?.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={session.user.image} alt="User" className="w-8 h-8 rounded-full border border-white/10" />
           ) : (
             <div className="w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold border border-white/5">
