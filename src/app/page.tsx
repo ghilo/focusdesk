@@ -16,9 +16,23 @@ export default function Dashboard() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Ajouter un raccourci clavier pour Cmd/Ctrl + K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        document.getElementById("global-search")?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const isClientArchived = (clientId: string | null) => {
     if (!clientId) return false;
@@ -26,7 +40,12 @@ export default function Dashboard() {
     return client?.archived === true;
   };
 
-  const baseActiveTasks = tasks.filter((t) => t.status === "active" && !isClientArchived(t.clientId)).sort((a, b) => {
+  const baseActiveTasks = tasks.filter((t) => {
+    if (t.status !== "active") return false;
+    if (isClientArchived(t.clientId)) return false;
+    if (searchQuery && !t.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
+  }).sort((a, b) => {
     if (a.dueDate && b.dueDate) return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
     if (a.dueDate) return -1;
     if (b.dueDate) return 1;
@@ -48,26 +67,45 @@ export default function Dashboard() {
       
       {/* Top Header */}
       <header className="flex flex-col md:flex-row gap-6 md:gap-0 justify-between items-start md:items-center mb-12">
-        <div className="relative w-full max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+        <div className="relative w-full max-w-md group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
           <input 
+            id="global-search"
             type="text" 
-            placeholder="Rechercher..." 
+            placeholder="Rechercher une tâche... (⌘K)" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-surface-container rounded-lg pl-11 pr-4 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-1 focus:ring-primary border-transparent placeholder:text-zinc-500 transition-all" 
           />
         </div>
         
         <div className="hidden md:flex items-center gap-6">
-          <button className="text-zinc-400 hover:text-white transition-colors focus:outline-none"><Bell className="w-5 h-5" /></button>
-          <button className="text-zinc-400 hover:text-white transition-colors focus:outline-none"><Command className="w-5 h-5" /></button>
-          {session?.user?.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={session.user.image} alt="User" className="w-8 h-8 rounded-full border border-white/10" />
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold border border-white/5">
-              {session?.user?.name?.charAt(0) || "U"}
-            </div>
-          )}
+          <button 
+            onClick={() => alert("Aucune nouvelle notification pour le moment.")}
+            className="text-zinc-400 hover:text-white transition-colors focus:outline-none"
+            title="Notifications"
+          >
+            <Bell className="w-5 h-5" />
+          </button>
+          
+          <button 
+            onClick={() => document.getElementById("global-search")?.focus()}
+            className="text-zinc-400 hover:text-white transition-colors focus:outline-none"
+            title="Rechercher (Cmd+K)"
+          >
+            <Command className="w-5 h-5" />
+          </button>
+          
+          <a href="/settings" className="hover:opacity-80 transition-opacity" title="Paramètres du profil">
+            {session?.user?.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={session.user.image} alt="User" className="w-8 h-8 rounded-full border border-white/10 shadow-sm" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold border border-white/5 shadow-sm">
+                {session?.user?.name?.charAt(0) || "U"}
+              </div>
+            )}
+          </a>
         </div>
       </header>
 
