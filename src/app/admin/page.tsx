@@ -74,51 +74,79 @@ export default async function AdminPage() {
 
       {/* Users List */}
       <h2 className="text-xl font-display font-bold text-white mb-6 flex items-center gap-2">
-        Détail des Utilisateurs
+        Annuaire des Utilisateurs
       </h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {users.map((user) => {
-          const activeTasks = user.tasks.filter((t) => t.status === "active").length;
-          const completedTasks = user.tasks.filter((t) => t.status === "done").length;
-          
-          return (
-            <div key={user.id} className="bg-surface-container rounded-[24px] p-6 border border-white/5 relative overflow-hidden group">
-              <div className="flex items-center gap-4 mb-6">
-                {user.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={user.image} alt={user.name || "User"} className="w-12 h-12 rounded-full border border-white/10" />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-surface-highest flex items-center justify-center text-white font-bold text-lg border border-white/10">
-                    {user.email?.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-white truncate">{user.name || "Sans nom"}</h3>
-                  <p className="text-sm text-zinc-400 truncate">{user.email}</p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-surface-highest/50 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                  <span className="text-2xl font-display font-bold text-white">{user.projects.length}</span>
-                  <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase mt-1">Projets</span>
-                </div>
-                <div className="bg-surface-highest/50 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                  <span className="text-2xl font-display font-bold text-white">{user.clients.length}</span>
-                  <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase mt-1">Clients</span>
-                </div>
-                <div className="bg-surface-highest/50 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                  <span className="text-2xl font-display font-bold text-emerald-400">{completedTasks}</span>
-                  <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase mt-1">Tâches Finies</span>
-                </div>
-                <div className="bg-surface-highest/50 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                  <span className="text-2xl font-display font-bold text-primary">{activeTasks}</span>
-                  <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase mt-1">Tâches Actives</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      
+      <div className="bg-surface-container rounded-2xl border border-white/5 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
+            <thead>
+              <tr className="border-b border-white/5 bg-surface-highest/30">
+                <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Utilisateur</th>
+                <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase text-center">Projets</th>
+                <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase text-center">Clients</th>
+                <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase text-center">Tâches Actives</th>
+                <th className="py-4 px-6 text-[10px] font-bold tracking-widest text-zinc-500 uppercase text-center">Tâches Finies</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {users.map((user) => {
+                const activeTasks = user.tasks.filter((t) => t.status === "active").length;
+                const completedTasks = user.tasks.filter((t) => t.status === "done").length;
+                
+                return (
+                  <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
+                    {/* User Info */}
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-3">
+                        {user.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={user.image} alt={user.name || "User"} className="w-10 h-10 rounded-full border border-white/10" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-surface-highest flex items-center justify-center text-white font-bold text-sm border border-white/10">
+                            {user.email?.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-white">{user.name || "Sans nom"}</span>
+                          <span className="text-xs text-zinc-400">{user.email}</span>
+                        </div>
+                      </div>
+                    </td>
+                    
+                    {/* Projects */}
+                    <td className="py-4 px-6 text-center">
+                      <span className="inline-flex items-center justify-center bg-blue-500/10 text-blue-400 text-xs font-bold px-3 py-1 rounded-full">
+                        {user.projects.length}
+                      </span>
+                    </td>
+
+                    {/* Clients */}
+                    <td className="py-4 px-6 text-center">
+                      <span className="inline-flex items-center justify-center bg-purple-500/10 text-purple-400 text-xs font-bold px-3 py-1 rounded-full">
+                        {user.clients.length}
+                      </span>
+                    </td>
+
+                    {/* Active Tasks */}
+                    <td className="py-4 px-6 text-center">
+                      <span className="inline-flex items-center justify-center bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
+                        {activeTasks}
+                      </span>
+                    </td>
+
+                    {/* Completed Tasks */}
+                    <td className="py-4 px-6 text-center">
+                      <span className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full">
+                        {completedTasks}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
