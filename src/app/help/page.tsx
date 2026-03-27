@@ -10,7 +10,7 @@ export default function HelpPage() {
       </div>
       
       <h1 className="text-4xl md:text-5xl font-display font-black text-foreground mb-4 tracking-tight">
-        L'aide est en chemin !
+        L&apos;aide est en chemin !
       </h1>
       
       <p className="text-zinc-500 dark:text-zinc-400 font-medium max-w-md text-lg md:text-xl leading-relaxed mb-10">
