@@ -38,7 +38,7 @@ export default async function AdminPage() {
           </div>
           <div>
             <h1 className="text-3xl font-display font-semibold tracking-tight text-white mb-2">
-              Panneau d'Administration
+              Panneau d&apos;Administration
             </h1>
             <p className="text-zinc-500 font-medium">
               Accès ultra restreint. Supervision de tous les utilisateurs et de leurs données.
@@ -85,6 +85,7 @@ export default async function AdminPage() {
             <div key={user.id} className="bg-surface-container rounded-[24px] p-6 border border-white/5 relative overflow-hidden group">
               <div className="flex items-center gap-4 mb-6">
                 {user.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={user.image} alt={user.name || "User"} className="w-12 h-12 rounded-full border border-white/10" />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-surface-highest flex items-center justify-center text-white font-bold text-lg border border-white/10">
