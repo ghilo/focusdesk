@@ -19,6 +19,8 @@ export default function SettingsPage() {
   const [telegramChatId, setTelegramChatId] = useState("");
   const [isSavingTelegram, setIsSavingTelegram] = useState(false);
   const [telegramSaveMessage, setTelegramSaveMessage] = useState({ text: "", type: "" });
+  const [isTesting, setIsTesting] = useState(false);
+  const [testMessage, setTestMessage] = useState({ text: "", type: "" });
 
   // Mounted state to wait for theme to load before rendering the toggle correctly
   const [mounted, setMounted] = useState(false);
@@ -92,6 +94,35 @@ export default function SettingsPage() {
     } finally {
       setIsSavingTelegram(false);
       setTimeout(() => setTelegramSaveMessage({ text: "", type: "" }), 3000);
+    }
+  };
+
+  const handleTestTelegram = async () => {
+    if (!telegramChatId.trim()) {
+      setTestMessage({ text: "Veuillez d'abord entrer un Chat ID.", type: "error" });
+      return;
+    }
+    
+    setIsTesting(true);
+    setTestMessage({ text: "", type: "" });
+    try {
+      const res = await fetch("/api/user/telegram/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ telegramChatId }),
+      });
+      
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setTestMessage({ text: "Message de test envoyé sur votre téléphone !", type: "success" });
+      } else {
+        setTestMessage({ text: data.error || "Échec de l'envoi.", type: "error" });
+      }
+    } catch {
+      setTestMessage({ text: "Erreur réseau.", type: "error" });
+    } finally {
+      setIsTesting(false);
+      setTimeout(() => setTestMessage({ text: "", type: "" }), 6000);
     }
   };
 
@@ -225,20 +256,41 @@ export default function SettingsPage() {
               <p className="text-xs text-zinc-500 mt-2">Vous pouvez obtenir votre Chat ID en envoyant un message à <a href="https://t.me/userinfobot" target="_blank" rel="noreferrer" className="text-primary hover:underline">@userinfobot</a>.</p>
             </div>
             
-            <div className="flex items-center gap-4">
-              <button
-                type="submit"
-                disabled={isSavingTelegram}
-                className="flex items-center gap-2 bg-primary text-foreground font-medium px-5 py-2.5 rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {isSavingTelegram ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                Sauvegarder
-              </button>
-              
-              {telegramSaveMessage.text && (
-                <span className={clsx("text-sm", telegramSaveMessage.type === "success" ? "text-emerald-500" : "text-danger")}>
-                  {telegramSaveMessage.text}
-                </span>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={isSavingTelegram}
+                  className="flex items-center gap-2 bg-primary text-foreground font-medium px-5 py-2.5 rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isSavingTelegram ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Sauvegarder
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={handleTestTelegram}
+                  disabled={isTesting || !telegramChatId}
+                  className="flex items-center gap-2 bg-surface-highest border border-border text-foreground font-medium px-5 py-2.5 rounded-xl hover:border-primary/50 hover:bg-primary/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isTesting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Tester l'envoi
+                </button>
+              </div>
+
+              {(telegramSaveMessage.text || testMessage.text) && (
+                <div className="text-sm font-medium animate-in fade-in slide-in-from-bottom-2">
+                  {telegramSaveMessage.text && (
+                    <p className={clsx(telegramSaveMessage.type === "success" ? "text-emerald-500" : "text-danger")}>
+                      {telegramSaveMessage.text}
+                    </p>
+                  )}
+                  {testMessage.text && (
+                    <p className={clsx(testMessage.type === "success" ? "text-emerald-500" : "text-danger")}>
+                      {testMessage.text}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </form>
