@@ -31,7 +31,7 @@ export async function sendTelegramNotification(chatId: string, text: string) {
     }
 
     return true;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error sending Telegram message:", error);
     throw error;
   }

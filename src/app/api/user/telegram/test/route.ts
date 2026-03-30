@@ -26,7 +26,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
 
-  } catch (error: any) {
-    return NextResponse.json({ error: `Erreur exacte: ${error.message}` }, { status: 400 });
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: `Erreur exacte: ${errorMsg}` }, { status: 400 });
   }
 }
