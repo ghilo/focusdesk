@@ -57,7 +57,7 @@ export async function POST(req: Request) {
 
     if (dbUser?.telegramChatId) {
       const { sendTelegramNotification } = await import("@/lib/telegram");
-      void sendTelegramNotification(
+      await sendTelegramNotification(
         dbUser.telegramChatId,
         `🔔 <b>Nouvelle tâche ajoutée</b>\n\n📌 <b>Titre:</b> ${task.title}\n📊 <b>Priorité:</b> ${task.priority}`
       );
