@@ -3,12 +3,12 @@ export async function sendTelegramNotification(chatId: string, text: string) {
   
   if (!token) {
     console.warn("TELEGRAM_BOT_TOKEN is not defined in environment variables. Notification not sent.");
-    return false;
+    throw new Error("TELEGRAM_BOT_TOKEN est introuvable sur Vercel (Environnements).");
   }
 
   if (!chatId) {
     console.warn("No Chat ID provided. Notification not sent.");
-    return false;
+    throw new Error("Chat ID manquant.");
   }
 
   try {
@@ -27,12 +27,12 @@ export async function sendTelegramNotification(chatId: string, text: string) {
     if (!response.ok) {
       const errorData = await response.json();
       console.error("Failed to send Telegram message:", errorData);
-      return false;
+      throw new Error(errorData.description || "Telegram API Error");
     }
 
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error sending Telegram message:", error);
-    return false;
+    throw error;
   }
 }

@@ -19,18 +19,14 @@ export async function POST(req: Request) {
 
     const { sendTelegramNotification } = await import("@/lib/telegram");
     
-    const success = await sendTelegramNotification(
+    await sendTelegramNotification(
       telegramChatId,
       `🎉 <b>Succès du test !</b>\n\nVotre connexion avec FocusDesk fonctionne parfaitement. Vous êtes prêt(e) à recevoir vos notifications !`
     );
 
-    if (success) {
-      return NextResponse.json({ success: true });
-    } else {
-      return NextResponse.json({ error: "Échec de l'envoi. Avez-vous cliqué sur 'Démarrer' avec le bot sur Telegram ?" }, { status: 400 });
-    }
+    return NextResponse.json({ success: true });
 
-  } catch {
-    return NextResponse.json({ error: "Erreur lors du test." }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: `Erreur exacte: ${error.message}` }, { status: 400 });
   }
 }
