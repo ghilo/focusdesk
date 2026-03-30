@@ -76,7 +76,7 @@ export async function GET(req: Request) {
   }
 
   // ---------------------------------------------------------
-  // 3. Process Daily Briefing (8 AM Paris Time)
+  // 3. Process Daily Briefing (User's custom Paris Time)
   // ---------------------------------------------------------
   const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Europe/Paris',
@@ -85,21 +85,31 @@ export async function GET(req: Request) {
   });
   const currentParisHour = parseInt(formatter.format(now), 10);
   
-  if (currentParisHour === 8) {
-    const usersForBriefing = await prisma.user.findMany({
-      where: {
-        notifyDailyBriefing: true,
-        telegramChatId: { not: null }
-      },
-      include: {
-        tasks: {
-          where: { status: "active" }
-        }
+  const usersForBriefing = await prisma.user.findMany({
+    where: {
+      notifyDailyBriefing: true,
+      telegramChatId: { not: null }
+    },
+    include: {
+      tasks: {
+        where: { status: "active" }
       }
-    });
+    }
+  });
 
-    for (const user of usersForBriefing) {
-      if (!user.telegramChatId) continue;
+  let briefingSentCount = 0;
+  for (const user of usersForBriefing) {
+    if (!user.telegramChatId) continue;
+    
+    // Check if the current Paris hour matches the hour setting in user.dailyBriefingTime
+    // Format is "08:00", so we extract the first 2 characters
+    const userBriefingHour = parseInt((user.dailyBriefingTime || "08:00").split(":")[0], 10);
+    
+    if (userBriefingHour !== currentParisHour) {
+      continue;
+    }
+    
+    briefingSentCount++;
       
       const total = user.tasks.length;
       if (total === 0) continue; 
@@ -129,7 +139,7 @@ export async function GET(req: Request) {
     processed: {
       overdueTasks: overdueTasks.length,
       approachingTasks: approachingTasks.length,
-      briefingSent: currentParisHour === 8
+      briefingsSent: briefingSentCount
     }
   });
 }

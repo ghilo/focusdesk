@@ -18,6 +18,7 @@ export async function POST(req: Request) {
         telegramChatId: body.telegramChatId || null,
         notifyOnCreate: body.notifyOnCreate ?? true,
         notifyDailyBriefing: body.notifyDailyBriefing ?? false,
+        dailyBriefingTime: body.dailyBriefingTime || "08:00",
         notifyApproachingDeadline: body.notifyApproachingDeadline ?? false,
         notifyOverdue: body.notifyOverdue ?? false,
       },
@@ -43,6 +44,7 @@ export async function GET() {
         telegramChatId: true,
         notifyOnCreate: true,
         notifyDailyBriefing: true,
+        dailyBriefingTime: true,
         notifyApproachingDeadline: true,
         notifyOverdue: true,
       },
@@ -52,6 +54,7 @@ export async function GET() {
       telegramChatId: user?.telegramChatId || "",
       notifyOnCreate: user?.notifyOnCreate ?? true,
       notifyDailyBriefing: user?.notifyDailyBriefing ?? false,
+      dailyBriefingTime: user?.dailyBriefingTime || "08:00",
       notifyApproachingDeadline: user?.notifyApproachingDeadline ?? false,
       notifyOverdue: user?.notifyOverdue ?? false,
     });

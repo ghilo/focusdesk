@@ -24,6 +24,7 @@ export default function SettingsPage() {
 
   const [notifyOnCreate, setNotifyOnCreate] = useState(true);
   const [notifyDailyBriefing, setNotifyDailyBriefing] = useState(false);
+  const [dailyBriefingTime, setDailyBriefingTime] = useState("08:00");
   const [notifyApproachingDeadline, setNotifyApproachingDeadline] = useState(false);
   const [notifyOverdue, setNotifyOverdue] = useState(false);
 
@@ -40,6 +41,7 @@ export default function SettingsPage() {
         if (data.telegramChatId) setTelegramChatId(data.telegramChatId);
         if (data.notifyOnCreate !== undefined) setNotifyOnCreate(data.notifyOnCreate);
         if (data.notifyDailyBriefing !== undefined) setNotifyDailyBriefing(data.notifyDailyBriefing);
+        if (data.dailyBriefingTime) setDailyBriefingTime(data.dailyBriefingTime);
         if (data.notifyApproachingDeadline !== undefined) setNotifyApproachingDeadline(data.notifyApproachingDeadline);
         if (data.notifyOverdue !== undefined) setNotifyOverdue(data.notifyOverdue);
       })
@@ -94,6 +96,7 @@ export default function SettingsPage() {
           telegramChatId,
           notifyOnCreate,
           notifyDailyBriefing,
+          dailyBriefingTime,
           notifyApproachingDeadline,
           notifyOverdue
         }),
@@ -285,16 +288,33 @@ export default function SettingsPage() {
                 </div>
               </label>
 
-              <label className="flex items-center justify-between cursor-pointer group gap-4">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-zinc-200">Résumé du matin (Daily Briefing)</p>
-                  <p className="text-xs text-zinc-500 mt-0.5">Recevoir le planning du jour tous les matins à 08h00.</p>
-                </div>
-                <div className="relative inline-flex items-center">
-                  <input type="checkbox" className="sr-only peer" checked={notifyDailyBriefing} onChange={(e) => setNotifyDailyBriefing(e.target.checked)} />
-                  <div className="w-11 h-6 bg-zinc-700/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                </div>
-              </label>
+              <div className="flex flex-col gap-3">
+                <label className="flex items-center justify-between cursor-pointer group gap-4">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-zinc-200">Résumé du matin (Daily Briefing)</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">Recevoir le planning de la journée sélectionnée.</p>
+                  </div>
+                  <div className="relative inline-flex items-center">
+                    <input type="checkbox" className="sr-only peer" checked={notifyDailyBriefing} onChange={(e) => setNotifyDailyBriefing(e.target.checked)} />
+                    <div className="w-11 h-6 bg-zinc-700/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </div>
+                </label>
+                {notifyDailyBriefing && (
+                  <div className="pl-4 border-l-2 border-border ml-2 flex items-center gap-3">
+                    <p className="text-sm text-zinc-400">Heure de réception :</p>
+                    <select
+                      value={dailyBriefingTime}
+                      onChange={(e) => setDailyBriefingTime(e.target.value)}
+                      className="bg-surface-highest border border-border rounded-lg px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    >
+                      {Array.from({ length: 24 }).map((_, i) => {
+                        const hour = i.toString().padStart(2, '0');
+                        return <option key={hour} value={`${hour}:00`}>{hour}:00</option>;
+                      })}
+                    </select>
+                  </div>
+                )}
+              </div>
 
               <label className="flex items-center justify-between cursor-pointer group gap-4">
                 <div className="flex-1">

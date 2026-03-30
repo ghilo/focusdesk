@@ -94,6 +94,7 @@ model User {
   
   notifyOnCreate            Boolean @default(true)
   notifyDailyBriefing       Boolean @default(false)
+  dailyBriefingTime         String  @default("08:00")
   notifyApproachingDeadline Boolean @default(false)
   notifyOverdue             Boolean @default(false)
 
