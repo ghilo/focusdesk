@@ -29,7 +29,7 @@ export default function CountdownTimer({ dueDate, isUrgent = true }: { dueDate: 
         text = `moins de ${hours + 1} heures`;
       }
       
-      let letters = isLate ? `En retard (${text})` : `Dans ${text}`;
+      const letters = isLate ? `En retard (${text})` : `Dans ${text}`;
 
       if (isLate) {
         digits = `RETARD ${digits}`;
