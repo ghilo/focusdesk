@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Échec de l'envoi. Avez-vous cliqué sur 'Démarrer' avec le bot sur Telegram ?" }, { status: 400 });
     }
 
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erreur lors du test." }, { status: 500 });
   }
 }

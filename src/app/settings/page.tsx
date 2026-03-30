@@ -274,7 +274,7 @@ export default function SettingsPage() {
                   className="flex items-center gap-2 bg-surface-highest border border-border text-foreground font-medium px-5 py-2.5 rounded-xl hover:border-primary/50 hover:bg-primary/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {isTesting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                  Tester l'envoi
+                  Tester l&apos;envoi
                 </button>
               </div>
 
