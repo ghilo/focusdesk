@@ -22,6 +22,11 @@ export default function SettingsPage() {
   const [isTesting, setIsTesting] = useState(false);
   const [testMessage, setTestMessage] = useState({ text: "", type: "" });
 
+  const [notifyOnCreate, setNotifyOnCreate] = useState(true);
+  const [notifyDailyBriefing, setNotifyDailyBriefing] = useState(false);
+  const [notifyApproachingDeadline, setNotifyApproachingDeadline] = useState(false);
+  const [notifyOverdue, setNotifyOverdue] = useState(false);
+
   // Mounted state to wait for theme to load before rendering the toggle correctly
   const [mounted, setMounted] = useState(false);
 
@@ -33,6 +38,10 @@ export default function SettingsPage() {
       .then(res => res.json())
       .then(data => {
         if (data.telegramChatId) setTelegramChatId(data.telegramChatId);
+        if (data.notifyOnCreate !== undefined) setNotifyOnCreate(data.notifyOnCreate);
+        if (data.notifyDailyBriefing !== undefined) setNotifyDailyBriefing(data.notifyDailyBriefing);
+        if (data.notifyApproachingDeadline !== undefined) setNotifyApproachingDeadline(data.notifyApproachingDeadline);
+        if (data.notifyOverdue !== undefined) setNotifyOverdue(data.notifyOverdue);
       })
       .catch(console.error);
   }, [fetchData]);
@@ -81,7 +90,13 @@ export default function SettingsPage() {
       const res = await fetch("/api/user/telegram", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ telegramChatId }),
+        body: JSON.stringify({ 
+          telegramChatId,
+          notifyOnCreate,
+          notifyDailyBriefing,
+          notifyApproachingDeadline,
+          notifyOverdue
+        }),
       });
 
       if (res.ok) {
@@ -255,8 +270,56 @@ export default function SettingsPage() {
               />
               <p className="text-xs text-zinc-500 mt-2">Vous pouvez obtenir votre Chat ID en envoyant un message à <a href="https://t.me/userinfobot" target="_blank" rel="noreferrer" className="text-primary hover:underline">@userinfobot</a>.</p>
             </div>
+
+            <div className="space-y-5 pt-6 pb-2 border-t border-border">
+              <h3 className="text-sm font-bold text-foreground">Préférences d&apos;alertes</h3>
+              
+              <label className="flex items-center justify-between cursor-pointer group gap-4">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-zinc-200">Alerte de création</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">Recevoir un message immédiatement à chaque nouvelle tâche.</p>
+                </div>
+                <div className="relative inline-flex items-center">
+                  <input type="checkbox" className="sr-only peer" checked={notifyOnCreate} onChange={(e) => setNotifyOnCreate(e.target.checked)} />
+                  <div className="w-11 h-6 bg-zinc-700/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </div>
+              </label>
+
+              <label className="flex items-center justify-between cursor-pointer group gap-4">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-zinc-200">Résumé du matin (Daily Briefing)</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">Recevoir le planning du jour tous les matins à 08h00.</p>
+                </div>
+                <div className="relative inline-flex items-center">
+                  <input type="checkbox" className="sr-only peer" checked={notifyDailyBriefing} onChange={(e) => setNotifyDailyBriefing(e.target.checked)} />
+                  <div className="w-11 h-6 bg-zinc-700/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </div>
+              </label>
+
+              <label className="flex items-center justify-between cursor-pointer group gap-4">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-zinc-200">Alerte d&apos;échéance imminente</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">Être prévenu lorsqu&apos;une tâche expire dans moins de 24h.</p>
+                </div>
+                <div className="relative inline-flex items-center">
+                  <input type="checkbox" className="sr-only peer" checked={notifyApproachingDeadline} onChange={(e) => setNotifyApproachingDeadline(e.target.checked)} />
+                  <div className="w-11 h-6 bg-zinc-700/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </div>
+              </label>
+
+              <label className="flex items-center justify-between cursor-pointer group gap-4">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-zinc-200">Alerte de retard</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">Être notifié lorsqu&apos;une tâche dépasse sa date limite.</p>
+                </div>
+                <div className="relative inline-flex items-center">
+                  <input type="checkbox" className="sr-only peer" checked={notifyOverdue} onChange={(e) => setNotifyOverdue(e.target.checked)} />
+                  <div className="w-11 h-6 bg-zinc-700/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </div>
+              </label>
+            </div>
             
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 pt-2">
               <div className="flex items-center gap-3">
                 <button
                   type="submit"

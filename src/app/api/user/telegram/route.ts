@@ -10,11 +10,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    const { telegramChatId } = await req.json();
+    const body = await req.json();
 
     const user = await prisma.user.update({
       where: { id: session.user.id },
-      data: { telegramChatId: telegramChatId || null },
+      data: { 
+        telegramChatId: body.telegramChatId || null,
+        notifyOnCreate: body.notifyOnCreate ?? true,
+        notifyDailyBriefing: body.notifyDailyBriefing ?? false,
+        notifyApproachingDeadline: body.notifyApproachingDeadline ?? false,
+        notifyOverdue: body.notifyOverdue ?? false,
+      },
     });
 
     return NextResponse.json({ success: true, user });
@@ -33,10 +39,22 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { telegramChatId: true },
+      select: { 
+        telegramChatId: true,
+        notifyOnCreate: true,
+        notifyDailyBriefing: true,
+        notifyApproachingDeadline: true,
+        notifyOverdue: true,
+      },
     });
 
-    return NextResponse.json({ telegramChatId: user?.telegramChatId || "" });
+    return NextResponse.json({ 
+      telegramChatId: user?.telegramChatId || "",
+      notifyOnCreate: user?.notifyOnCreate ?? true,
+      notifyDailyBriefing: user?.notifyDailyBriefing ?? false,
+      notifyApproachingDeadline: user?.notifyApproachingDeadline ?? false,
+      notifyOverdue: user?.notifyOverdue ?? false,
+    });
   } catch (error) {
     console.error("Erreur lors de la récupération du Chat ID Telegram", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

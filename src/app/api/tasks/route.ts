@@ -52,10 +52,10 @@ export async function POST(req: Request) {
 
     const dbUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { telegramChatId: true },
+      select: { telegramChatId: true, notifyOnCreate: true },
     });
 
-    if (dbUser?.telegramChatId) {
+    if (dbUser?.telegramChatId && dbUser.notifyOnCreate) {
       const { sendTelegramNotification } = await import("@/lib/telegram");
       await sendTelegramNotification(
         dbUser.telegramChatId,

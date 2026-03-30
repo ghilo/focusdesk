@@ -51,6 +51,8 @@ model Task {
 
   createdAt   DateTime  @default(now())
   completedAt DateTime?
+  notifiedApproaching Boolean @default(false)
+  notifiedOverdue     Boolean @default(false)
 }
 
 // --- NextAuth Models ---
@@ -89,6 +91,12 @@ model User {
   emailVerified DateTime?
   image         String?
   telegramChatId String?
+  
+  notifyOnCreate            Boolean @default(true)
+  notifyDailyBriefing       Boolean @default(false)
+  notifyApproachingDeadline Boolean @default(false)
+  notifyOverdue             Boolean @default(false)
+
   accounts      Account[]
   sessions      Session[]
   
