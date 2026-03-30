@@ -49,6 +49,20 @@ export async function POST(req: Request) {
         completedAt: body.completedAt ? new Date(body.completedAt) : null,
       },
     });
+
+    const dbUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { telegramChatId: true },
+    });
+
+    if (dbUser?.telegramChatId) {
+      const { sendTelegramNotification } = await import("@/lib/telegram");
+      void sendTelegramNotification(
+        dbUser.telegramChatId,
+        `🔔 <b>Nouvelle tâche ajoutée</b>\n\n📌 <b>Titre:</b> ${task.title}\n📊 <b>Priorité:</b> ${task.priority}`
+      );
+    }
+
     return NextResponse.json(task);
   } catch {
     

@@ -16,12 +16,23 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState({ text: "", type: "" });
   
+  const [telegramChatId, setTelegramChatId] = useState("");
+  const [isSavingTelegram, setIsSavingTelegram] = useState(false);
+  const [telegramSaveMessage, setTelegramSaveMessage] = useState({ text: "", type: "" });
+
   // Mounted state to wait for theme to load before rendering the toggle correctly
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     fetchData();
+    
+    fetch('/api/user/telegram')
+      .then(res => res.json())
+      .then(data => {
+        if (data.telegramChatId) setTelegramChatId(data.telegramChatId);
+      })
+      .catch(console.error);
   }, [fetchData]);
 
   useEffect(() => {
@@ -56,6 +67,31 @@ export default function SettingsPage() {
     } finally {
       setIsSaving(false);
       setTimeout(() => setSaveMessage({ text: "", type: "" }), 3000);
+    }
+  };
+
+  const handleSaveTelegram = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingTelegram(true);
+    setTelegramSaveMessage({ text: "", type: "" });
+
+    try {
+      const res = await fetch("/api/user/telegram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ telegramChatId }),
+      });
+
+      if (res.ok) {
+        setTelegramSaveMessage({ text: "Chat ID sauvegardé.", type: "success" });
+      } else {
+        throw new Error("API error");
+      }
+    } catch {
+      setTelegramSaveMessage({ text: "Erreur de sauvegarde.", type: "error" });
+    } finally {
+      setIsSavingTelegram(false);
+      setTimeout(() => setTelegramSaveMessage({ text: "", type: "" }), 3000);
     }
   };
 
@@ -161,6 +197,51 @@ export default function SettingsPage() {
               <span className={clsx("font-medium", theme === "system" ? "text-primary" : "text-zinc-500 dark:text-zinc-400")}>Système</span>
             </button>
           </div>
+        </section>
+
+        {/* Section Telegram */}
+        <section className="bg-surface border border-border rounded-3xl p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2.5 bg-blue-500/20 rounded-xl">
+              <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold">Notifications Telegram</h2>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Recevez des alertes lors de la création de tâches.</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSaveTelegram} className="max-w-md space-y-4">
+            <div>
+              <label htmlFor="telegramChatId" className="block text-sm font-medium text-zinc-300 mb-1.5">Chat ID Telegram</label>
+              <input
+                id="telegramChatId"
+                type="text"
+                value={telegramChatId}
+                onChange={(e) => setTelegramChatId(e.target.value)}
+                className="w-full bg-surface-highest border border-border rounded-xl px-4 py-2.5 text-foreground placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                placeholder="Ex: 123456789"
+              />
+              <p className="text-xs text-zinc-500 mt-2">Vous pouvez obtenir votre Chat ID en envoyant un message à <a href="https://t.me/userinfobot" target="_blank" rel="noreferrer" className="text-primary hover:underline">@userinfobot</a>.</p>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <button
+                type="submit"
+                disabled={isSavingTelegram}
+                className="flex items-center gap-2 bg-primary text-foreground font-medium px-5 py-2.5 rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isSavingTelegram ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                Sauvegarder
+              </button>
+              
+              {telegramSaveMessage.text && (
+                <span className={clsx("text-sm", telegramSaveMessage.type === "success" ? "text-emerald-500" : "text-danger")}>
+                  {telegramSaveMessage.text}
+                </span>
+              )}
+            </div>
+          </form>
         </section>
 
         {/* Section Danger Zone (Ancien Admin) */}
