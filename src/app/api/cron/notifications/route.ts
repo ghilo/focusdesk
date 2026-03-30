@@ -114,12 +114,12 @@ export async function GET(req: Request) {
       const total = user.tasks.length;
       if (total === 0) continue; 
       
-      const urgent = user.tasks.filter(t => t.priority === "high" || (t.dueDate && new Date(t.dueDate).getTime() < now.getTime() + 24 * 60 * 60 * 1000));
+      const urgent = user.tasks.filter((t: any) => t.priority === "high" || (t.dueDate && new Date(t.dueDate).getTime() < now.getTime() + 24 * 60 * 60 * 1000));
       
       let msg = `☕ <b>FocusDesk: Morning Briefing</b>\n\nBonjour ${user.name || ''} ! Voici votre planning.\nVous avez <b>${total}</b> tâches en cours au total.\n`;
       if (urgent.length > 0) {
          msg += `\n🔥 ${urgent.length} nécessitent votre attention en prio :\n`;
-         urgent.slice(0, 3).forEach(t => msg += `- ${t.title}\n`);
+         urgent.slice(0, 3).forEach((t: any) => msg += `- ${t.title}\n`);
          if (urgent.length > 3) msg += `- <i>...et ${urgent.length - 3} autres.</i>\n`;
       } else {
          msg += `\nAucune urgence aujourd'hui, détendez-vous ! 🧘‍♂️`;
@@ -131,7 +131,6 @@ export async function GET(req: Request) {
         console.error("Cron Briefing Error:", e);
       }
     }
-  }
 
   // 4. End of execution reporting
   return NextResponse.json({ 
