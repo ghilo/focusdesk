@@ -27,6 +27,24 @@ export default function SettingsPage() {
   const [dailyBriefingTime, setDailyBriefingTime] = useState("08:00");
   const [notifyApproachingDeadline, setNotifyApproachingDeadline] = useState(false);
   const [notifyOverdue, setNotifyOverdue] = useState(false);
+  const [isTestingCron, setIsTestingCron] = useState(false);
+
+  const handleTestCron = async () => {
+    setIsTestingCron(true);
+    try {
+      const res = await fetch("/api/cron/notifications?test=true");
+      const data = await res.json();
+      if (data.success) {
+        alert(`Test réussi !\n- Retards : ${data.processed.overdueTasks}\n- Échéances : ${data.processed.approachingTasks}\n- Briefings : ${data.processed.briefingsSent}`);
+      } else {
+        alert("Erreur : " + (data.error || "Inconnue"));
+      }
+    } catch {
+      alert("Erreur de connexion.");
+    } finally {
+      setIsTestingCron(false);
+    }
+  };
 
   // Mounted state to wait for theme to load before rendering the toggle correctly
   const [mounted, setMounted] = useState(false);
@@ -358,6 +376,16 @@ export default function SettingsPage() {
                 >
                   {isTesting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                   Tester l&apos;envoi
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleTestCron}
+                  disabled={isTestingCron || !telegramChatId}
+                  className="flex items-center gap-2 bg-zinc-800 border border-border text-zinc-300 font-medium px-5 py-2.5 rounded-xl hover:bg-zinc-700 disabled:opacity-50 transition-colors"
+                >
+                  {isTestingCron ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Tester les rappels (overdue/deadline)
                 </button>
               </div>
 

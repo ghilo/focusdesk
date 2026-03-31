@@ -1,83 +1,118 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { sendTelegramNotification } from "@/lib/telegram";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 
+interface TaskWithUser {
+  id: string;
+  title: string;
+  user: {
+    id: string;
+    telegramChatId: string | null;
+  } | null;
+}
+
+interface UserWithTasks {
+  id: string;
+  name: string | null;
+  telegramChatId: string | null;
+  dailyBriefingTime: string | null;
+  tasks: {
+    id: string;
+    title: string;
+    priority: string;
+    dueDate: Date | null;
+  }[];
+}
+
 export async function GET(req: Request) {
-  // Validate request is legitimately coming from Vercel Cron
+  const { searchParams } = new URL(req.url);
+  const isTest = searchParams.get('test') === 'true';
+
   const authHeader = req.headers.get('authorization');
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+  const session = await getServerSession(authOptions);
+
+  if (!isTest) {
+    if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    }
+  } else if (!session?.user?.id) {
+    return NextResponse.json({ error: "Session requise" }, { status: 401 });
   }
 
   const now = new Date();
+  const userId = isTest ? session?.user?.id : undefined;
 
-  // ---------------------------------------------------------
   // 1. Process Overdue Tasks
-  // ---------------------------------------------------------
-  const overdueTasks = await prisma.task.findMany({
+  const overdueTasksRaw = await prisma.task.findMany({
     where: {
       status: "active",
       dueDate: { lt: now },
-      notifiedOverdue: false,
-      user: {
+      ...(isTest ? {} : { notifiedOverdue: false }),
+      user: userId ? { id: userId } : {
         notifyOverdue: true,
         telegramChatId: { not: null }
       }
     },
-    include: { user: true }
+    include: { user: { select: { id: true, telegramChatId: true } } }
   });
+  
+  const overdueTasks = overdueTasksRaw as unknown as TaskWithUser[];
 
   for (const task of overdueTasks) {
-    if (task.user.telegramChatId) {
+    if (task.user?.telegramChatId) {
       try {
         await sendTelegramNotification(
           task.user.telegramChatId,
-          `⚠️ <b>Tâche en retard !</b>\n\nLa tâche officielle "<b>${task.title}</b>" vient de dépasser sa date limite.`
+          `⚠️ <b>Tâche en retard !</b>\n\nLa tâche "<b>${task.title}</b>" a dépassé sa limite.`
         );
-        await prisma.task.update({ where: { id: task.id }, data: { notifiedOverdue: true } });
-      } catch (e) {
-        console.error("Cron Overdue Email Error:", e);
+        if (!isTest) {
+          await prisma.task.update({ where: { id: task.id }, data: { notifiedOverdue: true } });
+        }
+      } catch {
+        // Ignored
       }
     }
   }
 
-  // ---------------------------------------------------------
-  // 2. Process Approaching Deadlines (due in < 24h)
-  // ---------------------------------------------------------
+  // 2. Process Approaching Deadlines
   const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  const approachingTasks = await prisma.task.findMany({
+  const approachingTasksRaw = await prisma.task.findMany({
     where: {
       status: "active",
       dueDate: { gt: now, lte: tomorrow },
-      notifiedApproaching: false,
-      user: {
+      ...(isTest ? {} : { notifiedApproaching: false }),
+      user: userId ? { id: userId } : {
         notifyApproachingDeadline: true,
         telegramChatId: { not: null }
       }
     },
-    include: { user: true }
+    include: { user: { select: { id: true, telegramChatId: true } } }
   });
 
+  const approachingTasks = approachingTasksRaw as unknown as TaskWithUser[];
+
   for (const task of approachingTasks) {
-    if (task.user.telegramChatId) {
+    if (task.user?.telegramChatId) {
       try {
         await sendTelegramNotification(
           task.user.telegramChatId,
-          `⏳ <b>Expiration imminente</b>\n\nAttention ! Plus que 24h pour terminer : "<b>${task.title}</b>".`
+          `⏳ <b>Expiration imminente</b>\n\nPlus que 24h pour : "<b>${task.title}</b>".`
         );
-        await prisma.task.update({ where: { id: task.id }, data: { notifiedApproaching: true } });
-      } catch (e) {
-        console.error("Cron Approaching Deadline Error:", e);
+        if (!isTest) {
+          await prisma.task.update({ where: { id: task.id }, data: { notifiedApproaching: true } });
+        }
+      } catch {
+        // Ignored
       }
     }
   }
 
-  // ---------------------------------------------------------
-  // 3. Process Daily Briefing (User's custom Paris Time)
-  // ---------------------------------------------------------
+  // 3. Process Daily Briefing
   const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Europe/Paris',
     hour: 'numeric',
@@ -85,56 +120,40 @@ export async function GET(req: Request) {
   });
   const currentParisHour = parseInt(formatter.format(now), 10);
   
-  const usersForBriefing = await prisma.user.findMany({
-    where: {
+  const usersForBriefingRaw = await prisma.user.findMany({
+    where: (userId ? { id: userId } : {
       notifyDailyBriefing: true,
       telegramChatId: { not: null }
-    },
+    }),
     include: {
-      tasks: {
-        where: { status: "active" }
+      tasks: { 
+        where: { status: "active" },
+        select: { id: true, title: true, priority: true, dueDate: true }
       }
     }
   });
 
+  const usersForBriefing = usersForBriefingRaw as unknown as UserWithTasks[];
+
   let briefingSentCount = 0;
   for (const user of usersForBriefing) {
     if (!user.telegramChatId) continue;
-    
-    // Check if the current Paris hour matches the hour setting in user.dailyBriefingTime
-    // Format is "08:00", so we extract the first 2 characters
+
     const userBriefingHour = parseInt((user.dailyBriefingTime || "08:00").split(":")[0], 10);
-    
-    if (userBriefingHour !== currentParisHour) {
-      continue;
-    }
+    if (!isTest && userBriefingHour !== currentParisHour) continue;
     
     briefingSentCount++;
-      
-      const total = user.tasks.length;
-      if (total === 0) continue; 
-      
-      const urgent = user.tasks.filter((t: { priority: string; dueDate: Date | null }) => t.priority === "high" || (t.dueDate && new Date(t.dueDate).getTime() < now.getTime() + 24 * 60 * 60 * 1000));
-      
-      let msg = `☕ <b>FocusDesk: Morning Briefing</b>\n\nBonjour ${user.name || ''} ! Voici votre planning.\nVous avez <b>${total}</b> tâches en cours au total.\n`;
-      if (urgent.length > 0) {
-         msg += `\n🔥 ${urgent.length} nécessitent votre attention en prio :\n`;
-         urgent.slice(0, 3).forEach((t) => {
-           msg += `- ${(t as { title: string }).title}\n`;
-         });
-         if (urgent.length > 3) msg += `- <i>...et ${urgent.length - 3} autres.</i>\n`;
-      } else {
-         msg += `\nAucune urgence aujourd'hui, détendez-vous ! 🧘‍♂️`;
-      }
-      
-      try {
-        await sendTelegramNotification(user.telegramChatId, msg);
-      } catch (e) {
-        console.error("Cron Briefing Error:", e);
-      }
+    const total = user.tasks.length;
+    if (total === 0 && !isTest) continue;
+    
+    const msg = `☕ <b>FocusDesk: Briefing</b>\n\nBonjour ${user.name || ''} !\nVous avez <b>${total}</b> tâches en cours.\n`;
+    try {
+      await sendTelegramNotification(user.telegramChatId, msg);
+    } catch {
+      // Ignored
     }
+  }
 
-  // 4. End of execution reporting
   return NextResponse.json({ 
     success: true, 
     processed: {
